@@ -8,6 +8,8 @@
 #include "compute.h"
 
 // represents the objects in the system.  Global variables
+vector3* d_accels;
+double *d_mass;
 vector3 *hVel, *d_hVel;
 vector3 *hPos, *d_hPos;
 double *mass;

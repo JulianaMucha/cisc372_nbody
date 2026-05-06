@@ -2,11 +2,12 @@
 #include <math.h>
 #include "vector.h"
 #include "config.h"
+#include <cuda.h>
 
 // cudaMalloc(&d_accels, NUMENTITIES*NUMENTITIES*sizeof(vector3)); in main
 
-vector3* d_accels;
-double *d_mass;
+//vector3* d_accels;
+//double *d_mass;
 
 //compute: Updates the positions and locations of the objects in the system based on gravity.
 //Parameters: None
