@@ -91,6 +91,7 @@ void printSystem(FILE* handle){
 
 int main(int argc, char **argv)
 {
+	cudaMalloc(&d_accels, NUMENTITIES*NUMENTITIES*sizeof(vector3));
 	clock_t t0=clock();
 	int t_now;
 	//srand(time(NULL));
@@ -98,42 +99,18 @@ int main(int argc, char **argv)
 	initHostMemory(NUMENTITIES);
 	planetFill();
 	randomFill(NUMPLANETS + 1, NUMASTEROIDS);
-
-	// allocate device memory
-        cudaMalloc(&d_accels, NUMENTITIES*NUMENTITIES*sizeof(vector3));
-        cudaMalloc(&d_hVel, NUMENTITIES * sizeof(vector3));
-        cudaMalloc(&d_hPos, NUMENTITIES * sizeof(vector3));
-	cudaMalloc(&d_mass, NUMENTITIES * sizeof(double));
-
-	cudaMemcpy(d_hPos, hPos, NUMENTITIES * sizeof(vector3), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_hVel, hVel, NUMENTITIES * sizeof(vector3), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_mass, mass, NUMENTITIES * sizeof(double), cudaMemcpyHostToDevice);
-
 	//now we have a system.
 	#ifdef DEBUG
 	printSystem(stdout);
 	#endif
 	for (t_now=0;t_now<DURATION;t_now+=INTERVAL){
 		compute();
-		cudaDeviceSynchronize();
-		update_bodies();
-		cudaDeviceSynchronize();
-		cudaGetLastError();
 	}
 	clock_t t1=clock()-t0;
-
-        cudaMemcpy(hPos, d_hPos, NUMENTITIES * sizeof(vector3), cudaMemcpyDeviceToHost);
-        cudaMemcpy(hVel, d_hVel, NUMENTITIES * sizeof(vector3), cudaMemcpyDeviceToHost);
-
 #ifdef DEBUG
 	printSystem(stdout);
 #endif
 	printf("This took a total time of %f seconds\n",(double)t1/CLOCKS_PER_SEC);
 
 	freeHostMemory();
-
-	// free device memory
-	cudaFree(d_accels);
-	cudaFree(d_hPos);
-	cudaFree(d_hVel);
 }
