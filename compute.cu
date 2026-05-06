@@ -4,10 +4,10 @@
 #include "config.h"
 #include <cuda.h>
 
-// cudaMalloc(&d_accels, NUMENTITIES*NUMENTITIES*sizeof(vector3)); in main
-
-//vector3* d_accels;
-//double *d_mass;
+extern vector3* d_accels;
+extern vector3* d_hPos;
+extern vector3* d_hVel;
+extern double* d_mass;
 
 //compute: Updates the positions and locations of the objects in the system based on gravity.
 //Parameters: None
@@ -17,6 +17,7 @@ __global__ void compute(){
 
 	int i = blockIdx.x * blockDim.x + threadIdx.x;
 	int j = blockIdx.y * blockDim.y + threadIdx.y;
+	int k;
 
 	//first compute the pairwise accelerations.  Effect is on the first argument.
 	if (i<NUMENTITIES && j<NUMENTITIES){
@@ -43,7 +44,7 @@ __global__ void update_bodies(){
 	if (i<NUMENTITIES){
 		vector3 accel_sum={0,0,0};
 		for (j=0;j<NUMENTITIES;j++){
-			for (k=0;k<3;k++)
+			for (k=0;k<3;k++){
 				accel_sum[k]+=d_accels[i*NUMENTITIES+j][k];
 			}
 		}
