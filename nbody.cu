@@ -93,6 +93,11 @@ void printSystem(FILE* handle){
 
 int main(int argc, char **argv)
 {
+	dim3 blockDim(16, 16);
+	dim3 gridDim((NUMENTITIES + 15) / 16, (NUMENTITIES + 15) / 16);
+	int threadsPerBlock = 256;
+	int blocks = (NUMENTITIES + threadsPerBlock - 1) / threadsPerBlock;
+
 	clock_t t0=clock();
 	int t_now;
 	//srand(time(NULL));
@@ -116,11 +121,10 @@ int main(int argc, char **argv)
 	printSystem(stdout);
 	#endif
 	for (t_now=0;t_now<DURATION;t_now+=INTERVAL){
-		compute();
+		compute<<<gridDim, blockDim>>>();
 		cudaDeviceSynchronize();
-		update_bodies();
+		update_bodies<<<blocks, threadsPerBlock>>>();
 		cudaDeviceSynchronize();
-		cudaGetLastError();
 	}
 	clock_t t1=clock()-t0;
 
@@ -138,4 +142,5 @@ int main(int argc, char **argv)
 	cudaFree(d_accels);
 	cudaFree(d_hPos);
 	cudaFree(d_hVel);
+	cudaFree(d_mass);
 }
