@@ -4,16 +4,16 @@
 #include "config.h"
 #include <cuda.h>
 
-extern vector3* d_accels;
-extern vector3* d_hPos;
-extern vector3* d_hVel;
-extern double* d_mass;
+//extern vector3* d_accels;
+//extern vector3* d_hPos;
+//extern vector3* d_hVel;
+//extern double* d_mass;
 
 //compute: Updates the positions and locations of the objects in the system based on gravity.
 //Parameters: None
 //Returns: None
 //Side Effect: Modifies the hPos and hVel arrays with the new positions and accelerations after 1 INTERVAL
-__global__ void compute(){
+__global__ void compute(vector3* pos, vector3*accels, double* mass){
 
 	int i = blockIdx.x * blockDim.x + threadIdx.x;
 	int j = blockIdx.y * blockDim.y + threadIdx.y;
@@ -35,7 +35,7 @@ __global__ void compute(){
 	}
 }
 
-__global__ void update_bodies(){
+__global__ void update_bodies(vector3* pos, vector3* vel, vector3* accels){
 
 	int i = blockIdx.x * blockDim.x + threadIdx.x;
 	int j, k;
