@@ -4,15 +4,10 @@
 #include "config.h"
 #include <cuda.h>
 
-extern __device__ vector3* d_accels;
-extern __device__ vector3* d_hPos;
-extern __device__ vector3* d_hVel;
-extern __device__ double* d_mass;
-
-//extern vector3* d_accels;
-//extern vector3* d_hPos;
-//extern vector3* d_hVel;
-//extern double* d_mass;
+extern vector3* d_accels;
+extern vector3* d_hPos;
+extern vector3* d_hVel;
+extern double* d_mass;
 
 //compute: Updates the positions and locations of the objects in the system based on gravity.
 //Parameters: None

@@ -9,18 +9,11 @@
 
 // represents the objects in the system.  Global variables
 
-extern "C" {
-	__device__ vector3* d_accels;
-	__device__ vector3* d_hPos;
-	__device__ vector3* d_hVel;
-	__device__ double* d_mass;
-}
-
-//vector3* d_accels;
-//double *d_mass;
-//vector3 *hVel, *d_hVel;
-//vector3 *hPos, *d_hPos;
-//double *mass;
+vector3* d_accels;
+double *d_mass;
+vector3 *hVel, *d_hVel;
+vector3 *hPos, *d_hPos;
+double *mass;
 
 //initHostMemory: Create storage for numObjects entities in our system
 //Parameters: numObjects: number of objects to allocate
